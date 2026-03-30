@@ -11,22 +11,38 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hrwa+k9j2y#x!^=7w&6^flf%=-qaw8&l)@a9y%r(1jtclwr%t-'
+# SECRET_KEY = 'django-insecure-hrwa+k9j2y#x!^=7w&6^flf%=-qaw8&l)@a9y%r(1jtclwr%t-'
+
+SECRET_KEY=os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+#BOOL
 
-ALLOWED_HOSTS = []
 
+DEBUG = True if os.getenv("DEBUG") == "True" else False
+
+
+# ALLOWED_HOSTS = [] #http://127.0.0.1:8000/
+
+#127.0.0.1,
+#["127.0.0.1",""]
+#["127.0.0.1"]
+
+ALLOWED_HOSTS = [host for host in os.getenv("ALLOWED_HOSTS").split(",") if host]
 
 # Application definition
 
@@ -37,6 +53,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
+    "apps.main.apps.MainConfig" #registering the application in the project (apps/main/apps.py)
 ]
 
 MIDDLEWARE = [
@@ -54,7 +73,9 @@ ROOT_URLCONF = 'core.urls' #path to the urls.py file, relative to the project fo
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / "templates" #path to the folder with html files
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,6 +136,12 @@ USE_TZ = True #timezones
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/' #url for static files (css, js, images) - http://
+STATTIC_ROOT = BASE_DIR / "static"
+
+#https://127.0.0.1:8000/media/users/profile.png
+MEDIAL_URL= "/media/"
+MEDİA_ROOT = BASE_DIR / "media" 
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
