@@ -7,5 +7,8 @@ from django.shortcuts import render
 #hello world
 
 def render_home_main(request):
-    return HttpResponse("Hello world!!!")
+    # return HttpResponse("Hello world!!!")
+    return render(request, "main/index.html")
 
+def show_about_page(request):
+    return render(request, "main/about.html")
