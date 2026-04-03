@@ -12,3 +12,6 @@ def render_home_main(request):
 
 def show_about_page(request):
     return render(request, "main/about.html")
+
+def show_faq_page(request):
+    return render(request, "main/faq.html")

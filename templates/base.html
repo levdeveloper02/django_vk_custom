@@ -14,12 +14,13 @@
 
 <body>
 
+  {% include "components/_header.html" %}
+  
 
-
-  <ul>
+  <!-- <ul>
     <li><a href="{% url 'home-page' %}">home</a></li>
     <li><a href="{% url 'about-page' %}">about</a></li>
-  </ul>
+  </ul> -->
   {% block content %}
   {% endblock%}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
