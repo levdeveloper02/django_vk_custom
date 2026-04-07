@@ -26,11 +26,11 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-hrwa+k9j2y#x!^=7w&6^flf%=-qaw8&l)@a9y%r(1jtclwr%t-'
 
-SECRET_KEY=os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-#BOOL
+# BOOL
 
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
@@ -38,11 +38,12 @@ DEBUG = True if os.getenv("DEBUG") == "True" else False
 
 # ALLOWED_HOSTS = [] #http://127.0.0.1:8000/
 
-#127.0.0.1,
-#["127.0.0.1",""]
-#["127.0.0.1"]
+# 127.0.0.1,
+# ["127.0.0.1",""]
+# ["127.0.0.1"]
 
-ALLOWED_HOSTS = [host for host in os.getenv("ALLOWED_HOSTS").split(",") if host]
+ALLOWED_HOSTS = [host for host in os.getenv(
+    "ALLOWED_HOSTS").split(",") if host]
 
 # Application definition
 
@@ -55,7 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
 
-    "apps.main.apps.MainConfig" #registering the application in the project (apps/main/apps.py)
+    # registering the application in the project (apps/main/apps.py)
+    "apps.main.apps.MainConfig"
 ]
 
 MIDDLEWARE = [
@@ -68,13 +70,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'core.urls' #path to the urls.py file, relative to the project folder (core/urls.py)
+# path to the urls.py file, relative to the project folder (core/urls.py)
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / "templates" #path to the folder with html files
+            BASE_DIR / "templates"  # path to the folder with html files
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -123,27 +126,29 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'tr' #tr, en, ru
+LANGUAGE_CODE = 'en-us'  # tr, en, ru
 
-TIME_ZONE = 'Europe/Istanbul' #Europe/Moscow, Asia/Bishkek, Asia/Almaty, Asia/Tashkent
+# Europe/Moscow, Asia/Bishkek, Asia/Almaty, Asia/Tashkent
+TIME_ZONE = 'Europe/Istanbul'
 
-USE_I18N = True #internationalization
+USE_I18N = True  # internationalization
 
-USE_TZ = True #timezones
+USE_TZ = True  # timezones
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/' #url for static files (css, js, images) - http://
-STATTIC_ROOT = BASE_DIR / "static"
+STATIC_URL = 'static/'  # url for static files (css, js, images) - http://
+STATIC_ROOT = BASE_DIR / "static"
 
-#https://127.0.0.1:8000/media/users/profile.png
-MEDIAL_URL= "/media/"
-MEDİA_ROOT = BASE_DIR / "media" 
+# https://127.0.0.1:8000/media/users/profile.png
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' #default type of primary key for models (integer, big integer, uuid, etc.)
+# default type of primary key for models (integer, big integer, uuid, etc.)
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
