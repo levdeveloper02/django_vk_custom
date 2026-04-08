@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+News
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-2">
+            <div class="list-group">
+                {% for item in categories_data %}
+                <a href="{% url 'show-by-category-page' forloop.counter %}" class="list-group-item list-group-item-action">{{ item }}</a>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="col-10">
+            <div class="row column-gap-4 row-gap-4">
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+                <div class="col-3">{% include 'components/_card.html' %}</div>
+
+            </div>
+            <nav aria-label="Page navigation example" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

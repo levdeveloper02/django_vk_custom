@@ -1,6 +1,6 @@
 from django.urls import path
-
 from . import views
+ 
 
 #list of links for the main application
 
@@ -9,5 +9,7 @@ from . import views
 urlpatterns=[
     path("", views.render_home_main, name="home-page"), #http://127.0.1:8000/ - home page    
     path("about/", views.show_about_page, name="about-page"), #http://127.0.1:8000/about/ - about page
-    path("fag/", views.show_faq_page, name="faq-page") #http://127.0.1:8000/faq/ - faq page
+    path("faq/", views.show_faq_page, name="faq-page"), #http://127.0.1:8000/faq/ - faq page
+    path("news/", views.show_news_page, name="news-page"), #http://127.0.1:8000/news/ - news page
+    path("news/categories/<int:category_id>/", views.show_by_category_page, name="show-by-category-page") #http://127.0.1:8000/news/categories/10/ - category page
 ]

@@ -22,3 +22,20 @@ def show_about_page(request):
 
 def show_faq_page(request):
     return render(request, "main/faq.html")
+
+categories_data=["Sports", "Politics","World","Space","Science"]
+
+
+def show_news_page(request):
+    context={
+        "categories_data": categories_data
+    }
+    return render(request, "main/news.html", context)
+
+#http://127.0.0.1:8000/news/categories/10
+
+def show_by_category_page(request, category_id):
+    context={
+        "categories_data": categories_data
+    }
+    return render(request, "main/news.html", context)
