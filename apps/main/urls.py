@@ -11,5 +11,5 @@ urlpatterns=[
     path("about/", views.show_about_page, name="about-page"), #http://127.0.1:8000/about/ - about page
     path("faq/", views.show_faq_page, name="faq-page"), #http://127.0.1:8000/faq/ - faq page
     path("news/", views.show_news_page, name="news-page"), #http://127.0.1:8000/news/ - news page
-    path("news/categories/<int:category_id>/", views.show_by_category_page, name="show-by-category-page") #http://127.0.1:8000/news/categories/10/ - category page
+    path("news/categories/<slug:category_slug>/", views.show_by_category, name="show-by-category") #http://127.0.1:8000/news/categories/10/ - category page
 ]

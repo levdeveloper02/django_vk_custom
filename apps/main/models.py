@@ -11,6 +11,7 @@ name varchar(255) not null unique...);
 
 #main_homeslider - main application (app) - main/models.py
 
+
 class HomesSlider(models.Model):
     id = models.UUIDField(editable=False, primary_key=True, default=uuid.uuid4) #primary key for the model
     image = models.ImageField(upload_to="home/slider/" ,verbose_name="foto") #media/slider/image_name.png | verbose_name="foto" - a name for the field in the admin panel
@@ -23,3 +24,46 @@ class HomesSlider(models.Model):
         verbose_name = "foto claydera" #ilk tablo(tekil) adı / a table name in singular form
         verbose_name_plural = "fotki claydera" #ikinci tablo(çoğul) adı / a table name in plural form
 
+
+#abctraktanya model' 
+
+class BaseModel(models.Model):
+    created_at=models.DateField(verbose_name="Data cozdaniya", auto_now="True") #2026-04-09 15:10
+    updated_at=models.DateField(verbose_name="Data izmeneniya", auto_now_add="True") 
+
+    class Meta:
+        abstract=True #makes it so that this model is not added to the database / abstract model
+
+#Category object(1)
+#Category object(2)
+#Category object(3)
+
+
+class Category(BaseModel):
+    name=models.CharField(max_length=100, unique=True, verbose_name="Nazvaniye") #varchar(100) not null unique
+    slug = models.SlugField(max_length=120, unique=True, verbose_name="Korotkaya cc'lka") #slug - a string that can be used in URLs, unique - each category must have a unique slug
+    is_active = models.BooleanField(default=True, verbose_name="Aktivna") #boolean field to indicate if the category is active or not
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = "kategoriya"
+        verbose_name_plural = "Kategorii"
+
+
+
+
+# id 
+# name
+# slug
+
+
+# b mire 
+
+
+#categories/1
+#categories/category-name
+
+
+# main_basemodel

@@ -5,13 +5,21 @@ News
 {% endblock %}
 
 {% block content %}
+
+
+{{ current_slug}}
 <div class="container mt-3">
     <div class="row">
         <div class="col-2">
             <div class="list-group">
-                {% for item in categories_data %}
-                <a href="{% url 'show-by-category-page' forloop.counter %}" class="list-group-item list-group-item-action">{{ item }}</a>
-                {% endfor %}
+                {% with a=request.resolver_match.kwargs.category_slug%} 
+
+                    {% for item in categories_data %}  <!-- for item in categories_data Category(1), Category (2) , Category(3) -->
+                    <a href="{% url 'show-by-category' item.slug %}" 
+                        class="list-group-item list-group-item-action {% if a == item.slug %} active {% endif %}">{{ item }}</a>
+                    {% endfor %}
+                {% endwith %}
+
             </div>
 
         </div>
