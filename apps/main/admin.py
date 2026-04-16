@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HomesSlider, Category
+from .models import HomesSlider, Category, Post
 
 # Register your models here.
 
@@ -25,4 +25,13 @@ class CategoryAdmin(admin.ModelAdmin):
     list_editable = ["is_active"] #list of fields that can be edited on the all items page
     list_filter = ["is_active", "created_at"] #list of fields for filtering elements
     search_fields = ["name"] #list of fields for searching
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display =["id", "title", "views_quantity", "author", "category"]
+    prepopulated_fields = {"slug": ("title",)}
+    readonly_fields = ["views_quantity"]
+    list_filter=["author", "category","created_at"]
+    
+
     

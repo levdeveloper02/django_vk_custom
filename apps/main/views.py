@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import HomesSlider,Category
+from .models import HomesSlider,Category,Post
 
 # Create your views here.
 
@@ -28,8 +28,13 @@ categories_data=["Sports", "Politics","World","Space","Science"]
 
 def show_news_page(request):
     categories_data= Category.objects.all() #select * from main_categories;
+    posts=Post.objects.all().values("title", "short_description", "preview") #select * from main_posts
+    print(request.__dict__)
+
+
     context={
-        "categories_data": categories_data
+        "categories_data": categories_data,
+        "posts":posts
     }
     return render(request, "main/news.html", context)
 

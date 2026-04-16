@@ -51,8 +51,33 @@ class Category(BaseModel):
         verbose_name = "kategoriya"
         verbose_name_plural = "Kategorii"
 
+class Post(BaseModel):
+    title = models.CharField(max_length=100, verbose_name="nazvaniye", unique=True)
+    slug = models.SlugField(max_length=140, verbose_name="Slag", unique=True)
+    short_description= models.TextField(verbose_name="Kratkoe opisaniye")
+    full_description = models.TextField(verbose_name="polnoye opisaniye", null=True, blank=True)
+    preview= models.ImageField(upload_to="media/previews/%y/%m/%d" , verbose_name="prev'iyu") #media/posts/%Y/%m/%d  2026/04/09
+    views_quantity=models.IntegerField(default=0, verbose_name="Kol-vo prosmotrov")
+    is_active=models.BooleanField(default=True, verbose_name="Aktivna")
+    author=models.ForeignKey("auth.User", on_delete=models.CASCADE, verbose_name="pol'zovatel'")
+    category=models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya")
 
 
+    def get_preview_url(self):
+        return self.preview.url
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = "post"
+        verbose_name_plural = "Posts"
+
+
+"""
+user_id İNTEGER,
+FOREİGN KEY(user_id) REFERENCES users(id)
+"""
 
 # id 
 # name

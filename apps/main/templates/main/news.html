@@ -25,14 +25,9 @@ News
         </div>
         <div class="col-10">
             <div class="row column-gap-4 row-gap-4">
+                {%for post in posts%}
                 <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
-                <div class="col-3">{% include 'components/_card.html' %}</div>
+                {%endfor%}
 
             </div>
             <nav aria-label="Page navigation example" class="mt-4">

@@ -143,8 +143,8 @@ STATIC_URL = 'static/'  # url for static files (css, js, images) - http://
 STATIC_ROOT = BASE_DIR / "static"
 
 # https://127.0.0.1:8000/media/users/profile.png
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type
