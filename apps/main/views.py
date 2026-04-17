@@ -28,8 +28,10 @@ categories_data=["Sports", "Politics","World","Space","Science"]
 
 def show_news_page(request):
     categories_data= Category.objects.all() #select * from main_categories;
-    posts=Post.objects.all().values("title", "short_description", "preview") #select * from main_posts
-    print(request.__dict__)
+    # posts=Post.objects.all().values("title", "short_description", "preview") #select * from main_posts (error)
+    posts=Post.objects.all()
+
+    # print(request.__dict__)
 
 
     context={
@@ -41,7 +43,7 @@ def show_news_page(request):
 #http://127.0.0.1:8000/news/categories/10
 
 def show_by_category(request, category_slug):
-    categories= Category.objects.all() #select * from main_categories;
+    categories_data= Category.objects.all() #select * from main_categories;
 
     # print(request.__dict__)
     # print(request.resolver_match)
@@ -49,11 +51,30 @@ def show_by_category(request, category_slug):
 
     #you can get an error if: 1)more than 1 value is recieved 2)no value is received
     category=Category.objects.get(slug=category_slug) # select * from main_categories where slug = ? 
-    
+
+    posts = Post.objects.filter(category=category) #select * from main_posts where category_id = ?  .filter() - used for filtering data based on certain conditions, it returns a new QuerySet containing the objects that match the given criteria.
     #.filter() 
     
     context={
-        "categories_data": categories,
-        "category": category
+        "categories_data": categories_data,
+        "category": category,
+        "posts":posts
     }
     return render(request, "main/news.html", context)
+
+
+#TODO: show post by id and slug
+#news/
+#news/categories/<slug>
+#news/<slug>
+
+
+from django.shortcuts import get_object_or_404
+
+def show_post_detail(request,slug):
+    # post=Post.objects.get(slug=slug) #select * from main_posts where slug = ? 
+    post=get_object_or_404(Post, slug=slug) #select * from main_posts where slug = ?  if no object is found, it raises a 404 error instead of throwing an exception
+    context={
+        "post": post
+    }
+    return render(request, "main/news_detail.html", context)

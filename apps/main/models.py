@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.urls import reverse
 
 """
 create table if not exists categoires(
@@ -62,10 +63,9 @@ class Post(BaseModel):
     author=models.ForeignKey("auth.User", on_delete=models.CASCADE, verbose_name="pol'zovatel'")
     category=models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Kategoriya")
 
+    def get_absolute_url(self): #metod dilya poluceniya cc'lki na detal'nuyu stranitsu / method for getting the URL to the detail page
+        return reverse("news-detail", kwargs={"slug": self.slug}) #reverse - a function that takes the name of a URL pattern and returns the URL, kwargs - a dictionary of keyword arguments to pass to the URL pattern
 
-    def get_preview_url(self):
-        return self.preview.url
-    
     def __str__(self):
         return self.title
     

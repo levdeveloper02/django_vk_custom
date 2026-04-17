@@ -1,8 +1,9 @@
 <div class="card">
-    <img src="{{request.META.HTTP_REFERER}}media/{{ post.preview }}" class="card-img-top" alt="...">
+    <!-- <img src="{{request.META.HTTP_REFERER}}media/{{ post.preview }}" class="card-img-top" alt="..."> (error)-->
+    <img src="{{ post.preview.url}}" class="card-img-top" alt="...">
     <div class="card-body">
         <h5 class="card-title">{{ post.title }}</h5>
         <p class="card-text">{{ post.short_description }}</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Detail</a>
     </div>
 </div>

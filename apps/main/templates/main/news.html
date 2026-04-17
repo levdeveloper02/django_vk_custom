@@ -13,7 +13,6 @@ News
         <div class="col-2">
             <div class="list-group">
                 {% with a=request.resolver_match.kwargs.category_slug%} 
-
                     {% for item in categories_data %}  <!-- for item in categories_data Category(1), Category (2) , Category(3) -->
                     <a href="{% url 'show-by-category' item.slug %}" 
                         class="list-group-item list-group-item-action {% if a == item.slug %} active {% endif %}">{{ item }}</a>
@@ -27,6 +26,8 @@ News
             <div class="row column-gap-4 row-gap-4">
                 {%for post in posts%}
                 <div class="col-3">{% include 'components/_card.html' %}</div>
+                {% empty %}
+                <h1 class="text-center">posti ne naydeni</h1>
                 {%endfor%}
 
             </div>

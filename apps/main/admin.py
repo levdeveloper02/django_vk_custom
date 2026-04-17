@@ -32,6 +32,7 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     readonly_fields = ["views_quantity"]
     list_filter=["author", "category","created_at"]
+    actions =["delete_selected_posts"] 
     
 
     
