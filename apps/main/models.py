@@ -29,7 +29,7 @@ class HomesSlider(models.Model):
 #abctraktanya model' 
 
 class BaseModel(models.Model):
-    created_at=models.DateField(verbose_name="Data cozdaniya", auto_now="True") #2026-04-09 15:10
+    created_at=models.DateTimeField(verbose_name="Data cozdaniya", auto_now_add="True") #2026-04-09 15:10
     updated_at=models.DateField(verbose_name="Data izmeneniya", auto_now_add="True") 
 
     class Meta:

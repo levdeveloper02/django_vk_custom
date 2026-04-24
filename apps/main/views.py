@@ -78,3 +78,7 @@ def show_post_detail(request,slug):
         "post": post
     }
     return render(request, "main/news_detail.html", context)
+
+def show_login_page(request):
+    return render(request, "main/login.html")
+
