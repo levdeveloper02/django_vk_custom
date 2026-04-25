@@ -43,9 +43,22 @@ mt- top indent - otstup vverh
 mb- bottom indent - otstup vniz
 -->
 
-      <a href="{% url 'register-page'%}" class="btn btn-outline-warning ms-2">Registration</a>
-      <a href="" class="btn btn-outline-success ms-2">Login</a>
-      <a href="" class="btn btn-outline-danger ms-2">Logout</a>
+      {% if not request.user.is_authenticated %}
+      <a href="{% url 'register-page' %}" class="btn btn-outline-warning ms-2">Registration</a>
+      <a href="{% url 'login-page' %}" class="btn btn-outline-success ms-2">Login</a>
+      {% else %}
+      <a href="{% url 'logout-page' %}" class="btn btn-outline-danger ms-2">Logout</a>
+      {% endif %}
     </div>
   </div>
 </nav>
+
+<!-- 
+sdelat' usloviya dilya knopok na detal'noy stranice stat'i:
+create conditions for buttons o the article's detail page:
+
+edit, delete - should be visible only to the author of the article / doljnı otobrazat'sya tol'ko avtoryu stat'i
+like, dislikle - all authorized users except tge author of the article / vsem avtorizvann'm pol'zovatelyam krome avtora stat'i
+
+
+-->

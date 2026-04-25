@@ -174,12 +174,14 @@ Post: {{ post.title }}
                     <b>Comments: </b> 0
                 </li> <!--2026/04/21 15:17:13-->
             </ul>
-
             <div class="d-flex justify-content-between mt-4">
+                {% if request.user == post.author %}
                 <a href="#" class="btn btn-warning">Edit</a>
                 <a href="#" class="btn btn-danger">Delete</a>
+                {% elif request.user.is_authenticated and request.user != post.author %}
                 <a href="#" class="btn btn-success">Like</a>
                 <a href="#" class="btn btn-danger">Dislike</a>
+                {% endif %}
             </div>
 
         </div>

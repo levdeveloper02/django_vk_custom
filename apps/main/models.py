@@ -79,6 +79,17 @@ user_id İNTEGER,
 FOREİGN KEY(user_id) REFERENCES users(id)
 """
 
+
+"""
+cozdat' tablitsa PostComment / create a table PostComment (homework)
+user
+post
+content
+created_at
+updated_at
+
+"""
+
 # id 
 # name
 # slug
