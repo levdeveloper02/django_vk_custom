@@ -19,7 +19,8 @@ Registration
         <div class="col-6">
             <form action="" method="post">
                 {% csrf_token %}
-                {{ form.as_pf }}
+
+                {{ form.as_p }}
 
                 <button class="btn btn-primary">Submit</button>
             </form>
@@ -28,7 +29,7 @@ Registration
 </div>
 
 {% if form.errors %}
-    <div class="alert alert-danger">
+    <div class="alert alert-danger mt-3">
         <div class="alert alert-danger">
             {{ form.errors }}
         </div>

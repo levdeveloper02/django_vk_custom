@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-from .models import HomesSlider,Category,Post
+from django.shortcuts import redirect, render
+from .models import HomesSlider,Category,Post, PostComment
 
 # Create your views here.
 
@@ -47,7 +47,7 @@ def show_by_category(request, category_slug):
 
     # print(request.__dict__)
     # print(request.resolver_match)
-    print(request.resolver_match.kwargs.get("category_slug"))
+    # print(request.resolver_match.kwargs.get("category_slug")) #get the value of category_slug from the URL
 
     #you can get an error if: 1)more than 1 value is recieved 2)no value is received
     category=Category.objects.get(slug=category_slug) # select * from main_categories where slug = ? 
@@ -71,14 +71,30 @@ def show_by_category(request, category_slug):
 
 from django.shortcuts import get_object_or_404
 
-def show_post_detail(request,slug):
+def show_post_detail_page(request,slug):
     # post=Post.objects.get(slug=slug) #select * from main_posts where slug = ? 
     post=get_object_or_404(Post, slug=slug) #select * from main_posts where slug = ?  if no object is found, it raises a 404 error instead of throwing an exception
+    if request.method == "POST":
+        comment_text=request.POST.get("post_comment") #get the value of post_comment from the form data
+        print(request.POST)
+        if comment_text and request.user.is_authenticated:
+            comment = PostComment.objects.create(
+            user=request.user,
+            post=post,
+        content=request.POST.get("post_comment")
+        )
+        comment.save()
+        return redirect("news-detail", slug=slug) #redirect to the same page after submitting the comment
+    
+    # comments= PostComment.objects.filter(post=post) #select * from main_postcomment where post_id = ?
     context={
         "post": post
     }
+
     return render(request, "main/news_detail.html", context)
 
 def show_login_page(request):
     return render(request, "main/login.html")
+
+
 
