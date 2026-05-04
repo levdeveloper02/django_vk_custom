@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import HomesSlider,Category,Post, PostComment
+from .forms import PostForm
 
 # Create your views here.
 
@@ -95,6 +96,18 @@ def show_post_detail_page(request,slug):
 
 def show_login_page(request):
     return render(request, "main/login.html")
+
+
+def create_post(request):
+    if request.method == "POST":
+        form=PostForm()
+    else:
+        form=PostForm()
+
+    context={
+        "form": form
+    }
+    return render(request, "main/news_create.html", context)
 
 
 

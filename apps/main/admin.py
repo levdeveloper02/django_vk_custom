@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HomesSlider, Category, Post, PostComment
+from .models import HomesSlider, Category, Post, PostComment, PostImage
 
 # Register your models here.
 
@@ -30,6 +30,10 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ["name"]  # list of fields for searching
 
 
+class PostImageInline(admin.TabularInline):
+    model = PostImage
+    extra = 1  # number of extra forms to display
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ["id", "title", "views_quantity", "author", "category"]
@@ -37,6 +41,11 @@ class PostAdmin(admin.ModelAdmin):
     readonly_fields = ["views_quantity"]
     list_filter = ["author", "category", "created_at"]
     actions = ["delete_selected_posts"]
+    inlines = [PostImageInline]
+     
+    @admin.action(description="Delete selected posts")
+    def delete_selected_posts(self, request, queryset):
+        queryset.delete() 
 
 
 @admin.register(PostComment)
@@ -50,4 +59,5 @@ class PostCommentAdmin(admin.ModelAdmin):
     def show_content(self, obj):
         return obj.content[:60]
     
+
 

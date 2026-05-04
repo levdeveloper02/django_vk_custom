@@ -130,6 +130,19 @@ class PostComment(BaseModel):
         verbose_name = "kommentariy posta"
         verbose_name_plural = "Kommentarii postov"
 
+def make_post_image_path(instance:"PostImage", filename:str):
+    return f"media/images/{instance.post.slug}/{filename}"
+
+class PostImage(BaseModel):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post",
+                             related_name="images")
+    image = models.ImageField(upload_to=make_post_image_path, verbose_name="foto")
+
+    class Meta:
+        verbose_name = "foto post"
+        verbose_name_plural = "foto posts"
+
+
 # auth.User = PostComment.objects.filter(user=user) - filter comments by user 
 #related_name="comments" = user.comments.all() - default related name for reverse relation
 # user.postcomment_set.all() - default related name for reverse relation
