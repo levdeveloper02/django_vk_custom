@@ -47,3 +47,9 @@ def show_login_page(request):
 def user_logout(request):
     logout(request)
     return redirect("home-page")
+
+def show_profile_page(request):
+    return render(request, "users/profile.html")
+
+def show_faq_page(request):
+    return render(request, "users/faq.html")

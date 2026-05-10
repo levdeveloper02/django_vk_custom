@@ -112,22 +112,22 @@ Post: {{ post.title }}
                     <b>Views: </b> {{ post.views_quantity }}
                 </li> <!--2026/04/21 15:17:13-->
                 <li class="list-group-item list-group-item-action">
-                    <b>Likes: </b> 0
+                    <b>Likes: </b> {{post.likes.user.count}}
                 </li> <!--2026/04/21 15:17:13-->
                 <li class="list-group-item list-group-item-action">
-                    <b>Dislikes: </b> 0
+                    <b>Dislikes: </b> {{post.dislikes.user.count}}
                 </li> <!--2026/04/21 15:17:13-->
                 <li class="list-group-item list-group-item-action">
-                    <b>Comments: </b> 0
+                    <b>Comments: </b> {{post.statiya.count}}
                 </li> <!--2026/04/21 15:17:13-->
             </ul>
             <div class="d-flex justify-content-between mt-4">
                 {% if request.user == post.author %}
-                <a href="#" class="btn btn-warning">Edit</a>
-                <a href="#" class="btn btn-danger">Delete</a>
+                <a href="{% url 'news-edit' post.slug %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'news-delete' post.slug %}" class="btn btn-danger">Delete</a>
                 {% elif request.user.is_authenticated and request.user != post.author %}
-                <a href="#" class="btn btn-success">Like</a>
-                <a href="#" class="btn btn-danger">Dislike</a>
+                <a href="{% url 'vote' post_slug=post.slug action='add_like' %}" class="btn btn-success">Like</a>
+                <a href="{% url 'vote' post_slug=post.slug action='add_dislike' %}" class="btn btn-danger">Dislike</a>
                 {% endif %}
             </div>
 
@@ -139,47 +139,45 @@ Post: {{ post.title }}
     </div>
 
 
-    <div class="mt-5">
-        <div class="row row-gap-4">
-
-            {% for comment in post.comments.all %}
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-header">
-                        { comment.created_at }
-                    </div>
-                    <div class="card-body">
-                        <figure>
-                            <blockquote class="blockquote">
-                                <p>{{ comment.content }}</p>
-                            </blockquote>
-                            <figcaption class="blockquote-footer">
-                                {{ comment.user }}
-                            </figcaption>
-                        </figure>
-                    </div>
+<div class="mt-5">
+    <div class="row g-4"> 
+        
+        {% for comment in post.statiya.all %}
+        <div class="col-md-6">
+            <div class="card h-100"> <div class="card-header">
+                    {{ comment.created_at }} 
+                </div>
+                <div class="card-body">
+                    <figure class="mb-0">
+                        <blockquote class="blockquote">
+                            <p class="fs-6">{{ comment.content }}</p> 
+                        </blockquote>
+                        <figcaption class="blockquote-footer mb-0">
+                            {{ comment.user }}
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
-            {% empty %}
-            <p>No comments </p>
-            {% endfor %}
         </div>
-        {% if request.user.is_authenticated %}
-        <form action="" method="post" class="mt-4">
-            {% csrf_token %}
-
-
-            <label for="">Comment</label>
-            <textarea required placeholder="Your comment" name="post_comment" id="" cols="30" rows="10"
-                class="form-control"></textarea>
-            <button class="btn btn-primary mt-2">Submit</button>
-        </form>
-        {% else %}
-        <p>Only authenticated users can write comments...</p>
-        {% endif%}
-    </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-muted">No comments yet...</p>
+        </div>
+        {% endfor %}
+        
+    </div> {% if request.user.is_authenticated %}
+    <form action="" method="post" class="mt-5">
+        {% csrf_token %}
+        <label for="" class="form-label fw-bold">Leave a Comment</label>
+        <textarea required placeholder="Your comment..." name="post_comment" id="" cols="30" rows="4"
+            class="form-control"></textarea>
+        <button class="btn btn-primary mt-3">Submit</button>
+    </form>
+    {% else %}
+    <p class="mt-4 text-danger">Only authenticated users can write comments...</p>
+    {% endif%}
 </div>
-{% endblock %}
+{%endblock%}
 
 <!--сделать переход на страницу /login/-->
 <!--при нажатии на Find More - нужно перенаправлять пользователя на страницу news -->

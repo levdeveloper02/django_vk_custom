@@ -133,6 +133,10 @@ class PostComment(BaseModel):
 def make_post_image_path(instance:"PostImage", filename:str):
     return f"media/images/{instance.post.slug}/{filename}"
 
+class UserPostView(BaseModel):
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, verbose_name="pol'zovatel'")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post", related_name="post_views")
+
 class PostImage(BaseModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="post",
                              related_name="images")
@@ -158,3 +162,12 @@ class PostImage(BaseModel):
 
 # categories/1
 # categories/category-name
+
+class PostLike(BaseModel):
+    user=models.ManyToManyField("auth.User", related_name="likes") #admin
+    post=models.OneToOneField(Post, on_delete=models.CASCADE, verbose_name="post", related_name="likes") #post    
+
+
+class PostDislike(BaseModel):
+    user=models.ManyToManyField("auth.User", related_name="dislikes") 
+    post=models.OneToOneField(Post, on_delete=models.CASCADE, verbose_name="post", related_name="dislikes")    

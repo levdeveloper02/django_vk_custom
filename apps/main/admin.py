@@ -44,7 +44,7 @@ class PostAdmin(admin.ModelAdmin):
     inlines = [PostImageInline]
      
     @admin.action(description="Delete selected posts")
-    def delete_selected_posts(self, request, queryset):
+    def delete_selected_posts(self, queryset):
         queryset.delete() 
 
 

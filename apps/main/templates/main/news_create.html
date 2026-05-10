@@ -5,7 +5,7 @@ Create post
 {% endblock %}
 
 {% block content %}
-<form action="" method="post" class="container">
+<form action="" method="post" class="container" enctype="multipart/form-data">
     {% csrf_token %}
 
     {{ form.as_p }}
