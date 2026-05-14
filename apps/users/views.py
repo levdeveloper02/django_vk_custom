@@ -3,6 +3,7 @@ from .forms import LoginForm, RegistrationFrom
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from . import urls
+from apps.main.models import Post, PostComment
 
 
 # def show_register_page(request):
@@ -49,7 +50,16 @@ def user_logout(request):
     return redirect("home-page")
 
 def show_profile_page(request):
-    return render(request, "users/profile.html")
+    posts=Post.objects.filter(author=request.user)
+    total_posts_views=[post.views_quantity for post in posts]
+    user_posts_comments=[post.statiya.count() for post in posts] #select * from posts where author =1
+
+    context={
+        "total_posts": posts.count(), #select * from posts where author =1
+        "total_views": sum(total_posts_views),
+        "total_comments": sum(user_posts_comments),
+    }
+    return render(request, "users/profile.html", context)
 
 def show_faq_page(request):
     return render(request, "users/faq.html")

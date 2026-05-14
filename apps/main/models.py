@@ -170,4 +170,7 @@ class PostLike(BaseModel):
 
 class PostDislike(BaseModel):
     user=models.ManyToManyField("auth.User", related_name="dislikes") 
-    post=models.OneToOneField(Post, on_delete=models.CASCADE, verbose_name="post", related_name="dislikes")    
+    post=models.OneToOneField(Post, on_delete=models.CASCADE, verbose_name="post", related_name="dislikes")   
+
+
+

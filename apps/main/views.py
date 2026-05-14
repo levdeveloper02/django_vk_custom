@@ -23,7 +23,7 @@ class PostUpdateView(UpdateView):
 
 def render_home_main(request):
     # return HttpResponse("Hello world!!!")
-    slider_photos = HomesSlider.objects.all()  # select * from main_homesslider;
+    slider_photos = HomesSlider.objects.all().count()  # select * from main_homesslider;
     context = {
         "slider_photos": slider_photos
     }
@@ -170,14 +170,20 @@ def add_like_or_dislike(request, post_slug, action):
     return redirect("news-detail", slug=post_slug)
 
 def delete_post(request, post_slug):
-    post=Post.objects.get(slug=post_slug) #select * from main_posts where slug = ?
+
+    if not request.user.is_superuser:
+        return redirect("news-page")
+    
+    post=Post.get_object_or_404(Post, slug=post_slug) #select * from main_posts where slug = ?
 
     if request.method == "POST":
         post.delete()
-        return redirect("news")
+        return redirect("news-page")
 
     context = {
         "post": post
     }
     return render(request, "main/post_comfirm_delete.html", context)
 
+def show_profile_page(request):
+    return render(request, "main/profile.html")

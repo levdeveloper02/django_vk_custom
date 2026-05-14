@@ -124,7 +124,7 @@ Post: {{ post.title }}
             <div class="d-flex justify-content-between mt-4">
                 {% if request.user == post.author %}
                 <a href="{% url 'news-edit' post.slug %}" class="btn btn-warning">Edit</a>
-                <a href="{% url 'news-delete' post.slug %}" class="btn btn-danger">Delete</a>
+                <a href="{% url 'news-delete' post_slug=post.slug %}" class="btn btn-danger">Delete</a>
                 {% elif request.user.is_authenticated and request.user != post.author %}
                 <a href="{% url 'vote' post_slug=post.slug action='add_like' %}" class="btn btn-success">Like</a>
                 <a href="{% url 'vote' post_slug=post.slug action='add_dislike' %}" class="btn btn-danger">Dislike</a>
