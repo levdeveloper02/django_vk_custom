@@ -17,10 +17,13 @@ Registration
 <div class="container d-flex align-items-center">
     <div class="row justify-content-center flex-grow-1">
         <div class="col-6">
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 {{ form.as_p }}
+                <p><label for="">Profile image</label>
+                    <input type="file" class="form-control" id="user-profiles-image" name="profile_image">
+                </p>
 
                 <button class="btn btn-primary">Submit</button>
             </form>

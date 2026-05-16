@@ -3,7 +3,8 @@ from .forms import LoginForm, RegistrationFrom
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from . import urls
-from apps.main.models import Post, PostComment
+from apps.main.models import Post, PostComment, PostLike, PostDislike
+from .models import UserProfile
 
 
 # def show_register_page(request):
@@ -18,6 +19,11 @@ def show_register_page(request):
         print(request.POST)
         form =RegistrationFrom(data=request.POST)
         if form.is_valid(): #proverka na validnost' zapolnenih dannih / check if the form is valid
+            user=form.save()
+            UserProfile.objects.create(
+                user=user,
+                image=request.FILES.get("profile_image")
+            )
             form.save() #sohranenie danniye iz formy v baze dannih / the from is save the to the database
             return redirect("login-page") #pereadresatsiya na stranicu login posle uspeshnoy registratsii / redirect to the login page after successful registration
     else :
@@ -51,13 +57,23 @@ def user_logout(request):
 
 def show_profile_page(request):
     posts=Post.objects.filter(author=request.user)
+
+
     total_posts_views=[post.views_quantity for post in posts]
     user_posts_comments=[post.statiya.count() for post in posts] #select * from posts where author =1
+    # total_likes = [post.likes.user.count() if hasattr(post, 'likes') else 0 for post in posts]
+    # total_dislikes=[post.dislikes.user.count() if hasattr(post, 'dislikes') else 0 for post in posts]
+    total_likes=[post.likes.user.count() for post in posts] #[2,2,3,4,5]
+    total_dislikes=[post.dislikes.user.count() for post in posts]
+
 
     context={
         "total_posts": posts.count(), #select * from posts where author =1
         "total_views": sum(total_posts_views),
         "total_comments": sum(user_posts_comments),
+        "posts": posts,
+        "total_likes": sum(total_likes),
+        "total_dislikes": sum(total_dislikes),
     }
     return render(request, "users/profile.html", context)
 

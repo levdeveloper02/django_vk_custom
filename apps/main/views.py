@@ -23,7 +23,7 @@ class PostUpdateView(UpdateView):
 
 def render_home_main(request):
     # return HttpResponse("Hello world!!!")
-    slider_photos = HomesSlider.objects.all().count()  # select * from main_homesslider;
+    slider_photos = HomesSlider.objects.all()  # select * from main_homesslider;
     context = {
         "slider_photos": slider_photos
     }
