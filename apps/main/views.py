@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import HomesSlider, Category, Post, PostComment, UserPostView, PostLike, PostDislike
 from .forms import PostForm
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView 
 
 
 class PostUpdateView(UpdateView):
@@ -12,6 +12,13 @@ class PostUpdateView(UpdateView):
     form_class = PostForm
     template_name = "main/news_create.html"
     slug_url_kwarg = "slug"
+
+    def form_valid(self,form):
+        form=form.save(commit=False)
+        form.slug=slugify(form.title)
+        form.save()
+        return redirect(self.object.get_absolute_url()) #self.object - the object that is being updated, get_absolute_url() - a method that returns the URL of the object
+    
 
 # Create your views here.
 

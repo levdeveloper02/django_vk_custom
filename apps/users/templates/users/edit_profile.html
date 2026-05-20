@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit "{{ user.username }}" profile
+{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex align-items-center">
+    <div class="row justify-content-center flex-grow-1">
+        <div class="col-6">
+            <form action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrfmiddlewaretoken"
+                    value="UMaQhBt8BW86DtHPnTmV2tz0uTtcFMmAH92SUafsI7385ODFLOsD73QVkmdyd3GA">
+                <p>
+                    <label for="id_first_name">First name:</label>
+                    <input type="text" name="first_name" value="{{user.first_name}}" class="form-control" maxlength="150"
+                        id="id_first_name">
+                </p>
+                <p>
+                    <label for="id_username">Username:</label>
+                    <input type="text" name="username" value="{{user.username}}" class="form-control" maxlength="150" required=""
+                        aria-describedby="id_username_helptext" id="id_username">
+                    <span class="helptext" id="id_username_helptext">Required. 150 characters or fewer. Letters, digits
+                        and @/./+/-/_ only.</span>
+                </p>
+                <p>
+                    <label for="id_email">Email address:</label>
+                    <input type="email" name="email" value="{{user.email}}" class="form-control" maxlength="254"
+                        id="id_email">
+                </p>
+                <p><label for="">Profile image</label>
+                    <input type="file" class="form-control" id="user-profiles-image" name="profile_image">
+                </p>
+                <button class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock%}

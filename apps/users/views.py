@@ -1,11 +1,30 @@
 from django.shortcuts import redirect, render
-from .forms import LoginForm, RegistrationFrom 
+from .forms import LoginForm, RegistrationFrom, EditProfileForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from . import urls
 from apps.main.models import Post, PostComment, PostLike, PostDislike
 from .models import UserProfile
 
+
+def edit_profile_page(request):
+    if request.method == "POST":
+        form = EditProfileForm(instance=request.user, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+
+            profile_image=request.FILES.get("profile_image")
+
+            if request.FILES.get("profile_image"):
+                request.user.profile.image=profile_image
+                request.user.profile.save()
+            return redirect("profile-page")
+    else:
+        form = EditProfileForm(instance=request.user)
+    context={
+        "form": form
+    }
+    return render(request, "users/edit_profile.html", context)
 
 # def show_register_page(request):
 #     if request.method == "POST":
