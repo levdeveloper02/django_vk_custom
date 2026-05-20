@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HomesSlider, Category, Post, PostComment, PostImage
+from .models import HomesSlider, Category, Post, PostComment, PostImage, FAQ
 
 # Register your models here.
 
@@ -61,3 +61,6 @@ class PostCommentAdmin(admin.ModelAdmin):
     
 
 
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    pass

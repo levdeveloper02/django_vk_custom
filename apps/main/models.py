@@ -172,5 +172,15 @@ class PostDislike(BaseModel):
     user=models.ManyToManyField("auth.User", related_name="dislikes") 
     post=models.OneToOneField(Post, on_delete=models.CASCADE, verbose_name="post", related_name="dislikes")   
 
+class FAQ(BaseModel):
+    question=models.CharField(max_length=100, verbose_name="vopros")
+    answer=models.TextField(verbose_name="otvet")
+
+    def __str__(self):
+        return self.question
+
+    class Meta:
+        verbose_name = "vopros-otvet"
+        verbose_name_plural = "vopros'-otveti"
 
 

@@ -2,7 +2,7 @@ from slugify import slugify
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from .models import HomesSlider, Category, Post, PostComment, UserPostView, PostLike, PostDislike
+from .models import HomesSlider, Category, Post, PostComment, UserPostView, PostLike, PostDislike,FAQ
 from .forms import PostForm
 from django.views.generic import UpdateView 
 
@@ -41,8 +41,6 @@ def show_about_page(request):
     return render(request, "main/about.html")
 
 
-def show_faq_page(request):
-    return render(request, "main/faq.html")
 
 
 categories_data = ["Sports", "Politics", "World", "Space", "Science"]
@@ -194,3 +192,5 @@ def delete_post(request, post_slug):
 
 def show_profile_page(request):
     return render(request, "main/profile.html")
+
+

@@ -3,7 +3,7 @@ from .forms import LoginForm, RegistrationFrom, EditProfileForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from . import urls
-from apps.main.models import Post, PostComment, PostLike, PostDislike
+from apps.main.models import Post, PostComment, PostLike, PostDislike, FAQ
 from .models import UserProfile
 
 
@@ -97,4 +97,12 @@ def show_profile_page(request):
     return render(request, "users/profile.html", context)
 
 def show_faq_page(request):
-    return render(request, "users/faq.html")
+    faqs=FAQ.objects.all()
+    # print("working!")
+    context={
+        "faqs": faqs
+    }
+    return render(request, "users/faq.html", context)
+
+
+

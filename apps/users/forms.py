@@ -51,4 +51,20 @@ class LoginForm(AuthenticationForm):
         model=User
         fields=["username", "password"]
 
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "username", "email"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            "username": forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+            "email": forms.EmailInput(attrs={
+                'class': 'form-control'
+            })
+        }  
+
     
