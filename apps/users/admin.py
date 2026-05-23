@@ -1,3 +1,10 @@
 from django.contrib import admin
+from .models import Subscriber, UserProfile
 
-# Register your models here.
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(UserProfile)
+class UserProfile(admin.ModelAdmin):
+    pass

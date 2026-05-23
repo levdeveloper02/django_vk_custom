@@ -184,3 +184,6 @@ class FAQ(BaseModel):
         verbose_name_plural = "vopros'-otveti"
 
 
+    
+
+

@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from . import urls
 from apps.main.models import Post, PostComment, PostLike, PostDislike, FAQ
-from .models import UserProfile
+from .models import Subscriber, UserProfile
 
 
 def edit_profile_page(request):
@@ -16,8 +16,12 @@ def edit_profile_page(request):
             profile_image=request.FILES.get("profile_image")
 
             if request.FILES.get("profile_image"):
-                request.user.profile.image=profile_image
-                request.user.profile.save()
+
+                profil,_=UserProfile.objects.get_or_create(user=request.user)
+                profil.image=profile_image
+                profil.save()
+                # request.user.profile.image=profile_image
+                # request.user.profile.save()
             return redirect("profile-page")
     else:
         form = EditProfileForm(instance=request.user)
@@ -104,5 +108,27 @@ def show_faq_page(request):
     }
     return render(request, "users/faq.html", context)
 
+
+def show_subscribers_page(request):
+
+
+    current_user=request.user
+
+    subscribers= Subscriber.objects.all() #[Subscriber, ]
+    # print(subscribers)
+
+    following_users=[]
+    for sub in subscribers:
+        if current_user in sub.subscriber.all():
+            following_users.append(sub)
+        # print(sub.user_profile, sub.subscriber.all())
+        # print(following_users)
+    following_users = [sub.user_profile.user for sub in following_users]
+
+    context={
+        "following_users": following_users
+    }
+
+    return render(request, "users/subscribers.html", context)    
 
 
