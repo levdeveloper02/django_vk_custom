@@ -182,8 +182,3 @@ class FAQ(BaseModel):
     class Meta:
         verbose_name = "vopros-otvet"
         verbose_name_plural = "vopros'-otveti"
-
-
-    
-
-

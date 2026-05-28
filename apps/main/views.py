@@ -114,8 +114,13 @@ def show_post_detail_page(request, slug):
             post.views_quantity += 1
             post.save()
 
+    # print(request.user in post.author.profile.subscribers.subscriber.all())
+    is_subscribed = request.user in post.author.profile.subscribers.subscriber.all()
+
+
     context = {
-        "post": post
+        "post": post,
+        "is_subscribed": is_subscribed
     }
     return render(request, "main/news_detail.html", context)
 
@@ -184,6 +189,7 @@ def delete_post(request, post_slug):
     if request.method == "POST":
         post.delete()
         return redirect("news-page")
+    
 
     context = {
         "post": post

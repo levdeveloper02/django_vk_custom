@@ -5,6 +5,8 @@ from django.contrib.auth import login, logout
 from . import urls
 from apps.main.models import Post, PostComment, PostLike, PostDislike, FAQ
 from .models import Subscriber, UserProfile
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 
 def edit_profile_page(request):
@@ -130,5 +132,46 @@ def show_subscribers_page(request):
     }
 
     return render(request, "users/subscribers.html", context)    
+
+
+
+
+
+def follow_user(request, user_id):
+
+    user_to_follow = User.objects.get(id=user_id) #polucayem pol'zovatelya  na kotorogo hotim podpisatsya / get the user we want to subscribe
+    current_user=request.user #pol'zovatel', kotorıy hocet podpisatsya / the user who wants to subscribe
+
+    target_profile , _ = UserProfile.objects.get_or_create(user=user_to_follow) #polucayem pol'zovatelya  na kotorogo hotim podpisatsya / get the user we want to subscribe
+    
+    subscriber_file , _= Subscriber.objects.get_or_create(user_profile=target_profile)
+
+    subscriber_file.subscriber.add(current_user) #dobavlyaem id pol'zovatelya , kotorıy hoçet podpisatsiya b cpisok id podpicannih pol'zovatelya /
+
+
+
+    #dobavlyaem id pol'zovatelya , kotorıy hoçet podpisatsiya b cpisok id podpicannih pol'zovatelya / 
+    #add the id of the user who wants to subscribe to the list of subscribed users
+
+    return JsonResponse({
+        "success": True,
+        "message": f"You have successfully followed {user_to_follow.username}",
+    })    
+
+def unfollow_user(request, user_id):
+
+    user_to_follow = User.objects.get(id=user_id) 
+    current_user=request.user 
+
+    target_profile , _ = UserProfile.objects.get_or_create(user=user_to_follow) 
+    
+    subscriber_file , _= Subscriber.objects.get_or_create(user_profile=target_profile)
+
+    subscriber_file.subscriber.remove(current_user) 
+
+    return JsonResponse({
+        "success": True,
+        "message": f"You have successfully unfollowed {user_to_follow.username}",
+    })    
 
 

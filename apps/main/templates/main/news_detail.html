@@ -105,15 +105,15 @@ Post: {{ post.title }}
                     </div>
 
                     <div>
-                        {% if user.is_authenticated and user != post.author  %}
-                            {% if user in post.author.profile.subscribers.subscriber.all %}
-                            <a href="" class="btn btn-danger">Unsubscribe</a>
-                            {% else %}
-                            <a href="" class="btn btn-success">Subscribe</a>
-                            {% endif %}
+                        {% if user.is_authenticated and user != post.author %}
+                        <a href="#" data-author-id="{{post.author.id}}"
+                            class="btn btn-danger unsubscribe-btn {% if not is_subscribed  %} d-none {% endif %}">Unsubscribe</a>
+
+                        <a href="#" data-author-id="{{post.author.id}}"
+                            class="btn btn-success subscribe-btn {% if is_subscribed  %} d-none {% endif %}">Subscribe</a>
                         {% endif %}
                     </div>
-                    
+
                 </li>
                 <li class="list-group-item list-group-item-action">
                     <b>Category: </b> {{ post.category.name }}
@@ -152,68 +152,96 @@ Post: {{ post.title }}
     </div>
 
 
-<div class="mt-5">
-    <div class="row g-4"> 
-        
-        {% for comment in post.statiya.all %}
-        <div class="col-md-6">
-            <div class="card h-100"> <div class="card-header">
-                    {{ comment.created_at }} 
-                </div>
-                <div class="card-body">
-                    <figure class="mb-0">
-                        <blockquote class="blockquote">
-                            <p class="fs-6">{{ comment.content }}</p> 
-                        </blockquote>
-                        <figcaption class="blockquote-footer mb-0">
-                            {{ comment.user }}
-                        </figcaption>
-                    </figure>
+    <div class="mt-5">
+        <div class="row g-4">
+
+            {% for comment in post.statiya.all %}
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        {{ comment.created_at }}
+                    </div>
+                    <div class="card-body">
+                        <figure class="mb-0">
+                            <blockquote class="blockquote">
+                                <p class="fs-6">{{ comment.content }}</p>
+                            </blockquote>
+                            <figcaption class="blockquote-footer mb-0">
+                                {{ comment.user }}
+                            </figcaption>
+                        </figure>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <p class="text-muted">No comments yet...</p>
-        </div>
-        {% endfor %}
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">No comments yet...</p>
+            </div>
+            {% endfor %}
+
+        </div> {% if request.user.is_authenticated %}
+        <form action="" method="post" class="mt-5">
+            {% csrf_token %}
+            <label for="" class="form-label fw-bold">Leave a Comment</label>
+            <textarea required placeholder="Your comment..." name="post_comment" id="" cols="30" rows="4"
+                class="form-control"></textarea>
+            <button class="btn btn-primary mt-3">Submit</button>
+        </form>
+        {% else %}
+        <p class="mt-4 text-danger">Only authenticated users can write comments...</p>
+        {% endif%}
+    </div>
+    {%endblock%}
+
+    <!--сделать переход на страницу /login/-->
+    <!--при нажатии на Find More - нужно перенаправлять пользователя на страницу news -->
+    {% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
+        var swiper2 = new Swiper(".mySwiper2", {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            thumbs: {
+                swiper: swiper,
+            },
+        });
+
+
+
+
+
+        let subBtn = document.querySelector('.subscribe-btn');
+        let unsubBtn = document.querySelector('.unsubscribe-btn');
+
+        let postAuthorId = subBtn.getAttribute('data-author-id');
+
+        function makeRequest(url) {
+            fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    unsubBtn.classList.toggle('d-none');
+                    subBtn.classList.toggle('d-none');
+                })
+        }
+
+        subBtn.addEventListener('click', () => {
+            makeRequest(`http://127.0.0.1:8000/users/${postAuthorId}/follow/`)
+        });
+
+        unsubBtn.addEventListener('click', () => {
+            makeRequest(`http://127.0.0.1:8000/users/${postAuthorId}/unfollow/`)
+        });
         
-    </div> {% if request.user.is_authenticated %}
-    <form action="" method="post" class="mt-5">
-        {% csrf_token %}
-        <label for="" class="form-label fw-bold">Leave a Comment</label>
-        <textarea required placeholder="Your comment..." name="post_comment" id="" cols="30" rows="4"
-            class="form-control"></textarea>
-        <button class="btn btn-primary mt-3">Submit</button>
-    </form>
-    {% else %}
-    <p class="mt-4 text-danger">Only authenticated users can write comments...</p>
-    {% endif%}
-</div>
-{%endblock%}
-
-<!--сделать переход на страницу /login/-->
-<!--при нажатии на Find More - нужно перенаправлять пользователя на страницу news -->
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-
-
-<script>
-    var swiper = new Swiper(".mySwiper", {
-        spaceBetween: 10,
-        slidesPerView: 4,
-        freeMode: true,
-        watchSlidesProgress: true,
-    });
-    var swiper2 = new Swiper(".mySwiper2", {
-        spaceBetween: 10,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        thumbs: {
-            swiper: swiper,
-        },
-    });
-</script>
-{% endblock %}
+    </script>
+    {% endblock %}
