@@ -115,7 +115,13 @@ def show_post_detail_page(request, slug):
             post.save()
 
     # print(request.user in post.author.profile.subscribers.subscriber.all())
-    is_subscribed = request.user in post.author.profile.subscribers.subscriber.all()
+    is_subscribed = False
+
+    if request.user.is_authenticated:
+        subscribers_obj = getattr(post.author.profile, "subscribers", None)
+
+        if subscribers_obj:
+            is_subscribed = request.user in subscribers_obj.subscriber.all()
 
 
     context = {
@@ -138,9 +144,8 @@ def create_post(request):
 
             news_form.author = request.user  # set the author of the post to the current user
             # generate a slug from the title of the post
-            news_form.slug = slugify(news_form.title)
-            news_form.save()  # save the form to the database
-            # redirect to the news page after creating a post
+            news_form.slug = slugify(news_form.title, allow_unicode=True)
+            news_form.save()  # save the form to the database            # redirect to the news page after creating a post
             return redirect("news-detail", news_form.slug)
     else:
         form = PostForm()
