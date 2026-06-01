@@ -88,8 +88,10 @@ def show_profile_page(request):
     user_posts_comments=[post.statiya.count() for post in posts] #select * from posts where author =1
     # total_likes = [post.likes.user.count() if hasattr(post, 'likes') else 0 for post in posts]
     # total_dislikes=[post.dislikes.user.count() if hasattr(post, 'dislikes') else 0 for post in posts]
-    total_likes=[post.likes.user.count() for post in posts] #[2,2,3,4,5]
-    total_dislikes=[post.dislikes.user.count() for post in posts]
+    total_likes=[post.likes.user.count() if hasattr(post, 'likes') else 0 for post in posts] #[2,2,3,4,5]
+    total_dislikes=[post.dislikes.user.count() if hasattr(post, 'dislikes') else 0 for post in posts]
+
+    subscriber_total=request.user.profile.subscribers.subscriber.count() if hasattr(request.user.profile, 'subscribers') else 0
 
 
     context={
@@ -99,6 +101,7 @@ def show_profile_page(request):
         "posts": posts,
         "total_likes": sum(total_likes),
         "total_dislikes": sum(total_dislikes),
+        "subscriber_total": subscriber_total    
     }
     return render(request, "users/profile.html", context)
 

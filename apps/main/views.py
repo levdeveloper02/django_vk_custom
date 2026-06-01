@@ -4,7 +4,9 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import HomesSlider, Category, Post, PostComment, UserPostView, PostLike, PostDislike,FAQ
 from .forms import PostForm
-from django.views.generic import UpdateView 
+from django.views.generic import UpdateView ,DeleteView
+from django.core.paginator import Paginator
+
 
 
 class PostUpdateView(UpdateView):
@@ -50,6 +52,16 @@ def show_news_page(request):
     categories_data = Category.objects.all()  # select * from main_categories;
     # posts=Post.objects.all().values("title", "short_description", "preview") #select * from main_posts (error)
     posts = Post.objects.all()
+
+
+    #posts - QuerySet select * from main_posts spısok obektov c bazı dannyı 
+    paginator=Paginator(posts, 3)
+
+    page=request.GET.get("page") #get the page number from the URL query parameters
+
+    posts=paginator.get_page(page) #polucayem postı peredannoy stranits' 
+
+
 
     # print(request.__dict__)
 

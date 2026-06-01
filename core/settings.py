@@ -57,7 +57,8 @@ INSTALLED_APPS = [
 
     # registering the application in the project (apps/main/apps.py)
     "apps.main.apps.MainConfig",
-    "apps.users.apps.UsersConfig"
+    "apps.users.apps.UsersConfig",
+    "apps.tg_bot.apps.TgbotConfig",
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # default type of primary key for models (integer, big integer, uuid, etc.)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+BOT_TOKEN=os.getenv("BOT_TOKEN")
