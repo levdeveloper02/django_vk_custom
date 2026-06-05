@@ -1,6 +1,6 @@
 from django.db import models
 
-class TelegramUser(models.Model):
+class TelegramBotUser(models.Model):
     user = models.OneToOneField("auth.User", on_delete=models.CASCADE, verbose_name="polzovatel")
     tg_username=models.CharField(max_length=100, unique=True, verbose_name="imya polzovatelya v tg")
     tg_chat_id=models.BigIntegerField(unique=True, verbose_name="ID polzovatelya v tg")

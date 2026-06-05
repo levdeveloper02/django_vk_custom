@@ -39,38 +39,94 @@ def edit_profile_page(request):
 #             form.save()
 #     return render(request, "users/register.html")
 
+from django.urls import reverse
+from django.shortcuts import redirect
+
+
 def show_register_page(request):
     if request.method == "POST":
-        print(request.POST)
-        form =RegistrationFrom(data=request.POST)
-        if form.is_valid(): #proverka na validnost' zapolnenih dannih / check if the form is valid
+        form = RegistrationFrom(data=request.POST)
+        
+        if form.is_valid():
+            # 1. Kullanıcıyı bir kere kaydet ve kimliğini (user) al
+            user = form.save()
+            
+            # 2. Kullanıcının profilini oluştur
+            UserProfile.objects.create(
+                user=user,
+                image=request.FILES.get("profile_image")
+            )
+            
+            # 3. Yönlendireceğimiz VIP rotayı bul
+            base_url = reverse("tg-bot-page")
+            
+            # 4. Eski login yönlendirmesini çöpe atıp, YENİ kullanıcının ID'si ile bot sayfasına yolla!
+            return redirect(f"{base_url}?user_id={user.id}")
+            
+    else:
+        form = RegistrationFrom()
+        
+    context = {
+        "form": form
+    }
+    return render(request, "users/register.html", context)
+
+# def show_register_page(request):
+
+#     base_url=reverse("tg-bot-page")  
+
+#     if request.method == "POST":
+#         print(request.POST)
+#         form =RegistrationFrom(data=request.POST)
+#         if form.is_valid(): #proverka na validnost' zapolnenih dannih / check if the form is valid
+#             user=form.save()
+#             UserProfile.objects.create(
+#                 user=user,
+#                 image=request.FILES.get("profile_image")
+#             )
+#             form.save() #sohranenie danniye iz formy v baze dannih / the from is save the to the database
+#             return redirect("login-page") #pereadresatsiya na stranicu login posle uspeshnoy registratsii / redirect to the login page after successful registration
+#     else :
+#         form = RegistrationFrom()
+#     context={
+#         "form": form
+#     }
+#     return render(request, "users/register.html", context)
+# return redirect(f"{base_url}?user_id={request.user.id}") 
+
+
+
+# def show_login_page(request):
+#     if request.method == "POST":
+#         form = LoginForm(data=request.POST)
+#         if form.is_valid():
+#             # log in the user
+#             user=form.get_user() #poluchenie pol'zovatelya iz formy / get the user from the form
+#             if user is not None:
+#                 login(request, user) #vypolnenie funktsii login dlya avtorizatsii pol'zovatelya / perform the login function to authorize the user
+#                 return redirect("home-page")
+#     else:
+#         form = LoginForm()
+#     context={
+#         "form": form
+#     }
+#     return render(request, "users/login.html", context)
+
+def show_login_page(request):
+    if request.method == "POST":
+        form= RegistrationFrom(data=request.POST)
+        if form.is_valid():
             user=form.save()
             UserProfile.objects.create(
                 user=user,
                 image=request.FILES.get("profile_image")
             )
-            form.save() #sohranenie danniye iz formy v baze dannih / the from is save the to the database
-            return redirect("login-page") #pereadresatsiya na stranicu login posle uspeshnoy registratsii / redirect to the login page after successful registration
-    else :
-        form = RegistrationFrom()
-    context={
-        "form": form
-    }
-    return render(request, "users/register.html", context)
 
 
 
-def show_login_page(request):
-    if request.method == "POST":
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            # log in the user
-            user=form.get_user() #poluchenie pol'zovatelya iz formy / get the user from the form
-            if user is not None:
-                login(request, user) #vypolnenie funktsii login dlya avtorizatsii pol'zovatelya / perform the login function to authorize the user
-                return redirect("home-page")
+            return redirect(f"/tg-bot/confirmation/?user_id={user.id}")
     else:
-        form = LoginForm()
+        form = RegistrationFrom()
     context={
         "form": form
     }
