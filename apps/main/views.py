@@ -2,11 +2,13 @@ from slugify import slugify
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from .models import HomesSlider, Category, Post, PostComment, UserPostView, PostLike, PostDislike,FAQ
+from .models import HomesSlider, Category, Post, PostComment, UserPostView, PostLike, PostDislike, FAQ
 from .forms import PostForm
-from django.views.generic import UpdateView ,DeleteView
+from django.views.generic import UpdateView, DeleteView
+from django.urls import reverse
 from django.core.paginator import Paginator
-
+from apps.tg_bot.bot import bot
+from apps.tg_bot.models import TelegramBotUser
 
 
 class PostUpdateView(UpdateView):
@@ -15,12 +17,13 @@ class PostUpdateView(UpdateView):
     template_name = "main/news_create.html"
     slug_url_kwarg = "slug"
 
-    def form_valid(self,form):
-        form=form.save(commit=False)
-        form.slug=slugify(form.title)
+    def form_valid(self, form):
+        form = form.save(commit=False)
+        form.slug = slugify(form.title)
         form.save()
-        return redirect(self.object.get_absolute_url()) #self.object - the object that is being updated, get_absolute_url() - a method that returns the URL of the object
-    
+        # self.object - the object that is being updated, get_absolute_url() - a method that returns the URL of the object
+        return redirect(self.object.get_absolute_url())
+
 
 # Create your views here.
 
@@ -43,25 +46,20 @@ def show_about_page(request):
     return render(request, "main/about.html")
 
 
-
-
 categories_data = ["Sports", "Politics", "World", "Space", "Science"]
 
 
 def show_news_page(request):
     categories_data = Category.objects.all()  # select * from main_categories;
-    # posts=Post.objects.all().values("title", "short_description", "preview") #select * from main_posts (error)
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by("-created_at")  # desc
 
+    # posts - QuerySet select * from main_posts spısok obektov c bazı dannyı
+    paginator = Paginator(posts, 3)
 
-    #posts - QuerySet select * from main_posts spısok obektov c bazı dannyı 
-    paginator=Paginator(posts, 3)
+    # get the page number from the URL query parameters
+    page = request.GET.get("page")
 
-    page=request.GET.get("page") #get the page number from the URL query parameters
-
-    posts=paginator.get_page(page) #polucayem postı peredannoy stranits' 
-
-
+    posts = paginator.get_page(page)  # polucayem postı peredannoy stranits'
 
     # print(request.__dict__)
 
@@ -104,17 +102,34 @@ def show_by_category(request, category_slug):
 
 
 def show_post_detail_page(request, slug):
-    # post=Post.objects.get(slug=slug) #select * from main_posts where slug = ?
-    # select * from main_posts where slug = ?  if no object is found, it raises a 404 error instead of throwing an exception
     post = get_object_or_404(Post, slug=slug)
+
     if request.method == "POST":
-        comment_text = request.POST.get("post_comment")
-        if comment_text and request.user.is_authenticated:
-            comment = PostComment.objects.create(
-                user=request.user,
-                post=post,
-                content=comment_text
+        # 1. Yorumu yarat (create zaten kaydeder, ekstra save() yazmaya gerek yok!)
+        comment_text = PostComment.objects.create(
+            user=request.user,
+            post=post,
+            content=request.POST.get("post_comment")
+        )
+
+        # 2. Yazarın Telegram hesabı var mı diye NAZİKÇE soruyoruz (.get yerine .filter().first())
+        post_author_tg_user = TelegramBotUser.objects.filter(
+            user=post.author).first()
+
+        # 3. EĞER yazarın Telegram hesabı GERÇEKTEN varsa mesajı gönder!
+        if post_author_tg_user:
+            bot.send_message(
+                chat_id=post_author_tg_user.tg_chat_id,
+                text=f"""
+na post: <a href='http://127.0.0.1:8000/news/{post.slug}'> {post.title} </a>
+
+b'ıl dobavlen kommentariy
+
+<i>{comment_text.content}</i>
+""",
+                parse_mode="HTML"
             )
+
         return redirect("news-detail", slug=slug)
 
     if request.user.is_authenticated:
@@ -134,7 +149,6 @@ def show_post_detail_page(request, slug):
 
         if subscribers_obj:
             is_subscribed = request.user in subscribers_obj.subscriber.all()
-
 
     context = {
         "post": post,
@@ -174,46 +188,67 @@ def add_like_or_dislike(request, post_slug, action):
 
     post = get_object_or_404(Post, slug=post_slug)
 
+    post_author = TelegramBotUser.objects.get(user=post.author)
+
+    temp = ""
+
+    user=request.user
+    user_info = {user.first_name } or {user.username}
     post_like_obj, _ = PostLike.objects.get_or_create(post=post)
     post_dislike_obj, _ = PostDislike.objects.get_or_create(post=post)
 
     # HTML'den gelen parolayı "add_like" olarak güncelledik!
     if action == "add_like":
-        if request.user not in post_like_obj.user.all():
-            post_like_obj.user.add(request.user)      # Beğenenlere ekle
-            post_dislike_obj.user.remove(request.user)  # Varsa dislike'tan sil
+        if user not in post_like_obj.user.all():
+            post_like_obj.user.add(user)      # Beğenenlere ekle
+            post_dislike_obj.user.remove(user)  # Varsa dislike'tan sil
+            temp=f"na post {post.title} bıl dobavlen layk ı ubran dizlayk ot polzovatelya {user_info}"
         else:
             # Zaten beğenmişse geri al
-            post_like_obj.user.remove(request.user)
+            post_like_obj.user.remove(user)
+            temp=f"na post {post.title} bıl ubran layk ot polzovatelya {user_info}"
 
     elif action == "add_dislike":
-        if request.user not in post_dislike_obj.user.all():
-            post_dislike_obj.user.add(request.user)   # Dislike'a ekle
-            post_like_obj.user.remove(request.user)   # Varsa like'tan sil
+        if user not in post_dislike_obj.user.all():
+            post_dislike_obj.user.add(user)   # Dislike'a ekle
+            post_like_obj.user.remove(user)   # Varsa like'tan sil
+            temp=f"na post {post.title} bıl dobavlen dizlayk ı ubran layk ot polzovatelya {user_info}"
         else:
             # Zaten dislike atmışsa geri al
-            post_dislike_obj.user.remove(request.user) #where user_id=?
-
+            post_dislike_obj.user.remove(user)  # where user_id=?
+            temp=f"na post {post.title} bıl ubran dizlayk ot polzovatelya {user_info}"
+    msg = f"""
+{temp}
+        
+    kol_bo laykov v dizlaykov:
+    layki:{post.likes.user.count()}
+    dizlayki:{post.dislikes.user.count()}
+        
+"""
+    bot.send_message(
+        chat_id=post_author.tg_chat_id,
+        text=msg
+    )
     return redirect("news-detail", slug=post_slug)
 
+ 
 def delete_post(request, post_slug):
 
     if not request.user.is_superuser:
         return redirect("news-page")
-    
-    post=Post.get_object_or_404(Post, slug=post_slug) #select * from main_posts where slug = ?
+
+    # select * from main_posts where slug = ?
+    post = Post.get_object_or_404(Post, slug=post_slug)
 
     if request.method == "POST":
         post.delete()
         return redirect("news-page")
-    
 
     context = {
         "post": post
     }
     return render(request, "main/post_comfirm_delete.html", context)
 
+
 def show_profile_page(request):
     return render(request, "main/profile.html")
-
-

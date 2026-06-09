@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 
 # <input type="text" name="username" placeholder="write your name">
-class RegistrationFrom(UserCreationForm):
+class RegistrationForm(UserCreationForm):
     username=forms.CharField(widget=forms.TextInput(attrs={
         'placeholder': 'write your name..',
         'class': 'form-control'

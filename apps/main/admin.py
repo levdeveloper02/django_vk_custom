@@ -42,6 +42,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ["author", "category", "created_at"]
     actions = ["delete_selected_posts"]
     inlines = [PostImageInline]
+    list_editable=["author", "category"]
      
     @admin.action(description="Delete selected posts")
     def delete_selected_posts(self, queryset):
