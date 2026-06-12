@@ -36,8 +36,17 @@ class PostUpdateView(UpdateView):
 def render_home_main(request):
     # return HttpResponse("Hello world!!!")
     slider_photos = HomesSlider.objects.all()  # select * from main_homesslider;
+
+    posts=Post.objects.all() 
+
+    most_viewed_posts=posts.order_by("-views_quantity")[:4] #select * from main_posts order by views_quantity desc limit 4
+    recently_added= posts.order_by("-created_at")[:4]
+    
+    
     context = {
-        "slider_photos": slider_photos
+        "slider_photos": slider_photos,
+        "most_viewed_posts": most_viewed_posts,
+        "recently_added": recently_added
     }
     return render(request, "main/index.html", context=context)
 
@@ -252,3 +261,25 @@ def delete_post(request, post_slug):
 
 def show_profile_page(request):
     return render(request, "main/profile.html")
+
+
+from django.db.models import Q
+
+
+def search_page(request):
+    query = request.GET.get("q")
+    
+    if not query:
+        qs = Post.objects.all()
+    else:
+        qs = Post.objects.filter(
+            Q(title__icontains=query) | 
+            # Q(statiya__icontains=query) |
+            Q(full_description__icontains=query) |
+            Q(short_description__icontains=query)
+        )
+    context = {
+        "posts": qs,
+        "query": query
+    }
+    return render(request, "main/search.html", context)

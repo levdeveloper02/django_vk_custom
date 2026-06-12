@@ -24,6 +24,7 @@ urlpatterns = [
     path("", include("apps.main.urls")),
     path("users/", include("apps.users.urls")),
     path("tg-bot/", include("apps.tg_bot.urls")),
+    path("api/", include("apps.api.urls")),
 ]
 
 if settings.DEBUG:
